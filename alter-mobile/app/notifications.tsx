@@ -6,6 +6,7 @@ import {
   Animated,
   Easing,
   StatusBar,
+  Button,
 } from "react-native";
 import io from "socket.io-client";
 import { Bell } from "lucide-react-native";
@@ -28,8 +29,12 @@ const SOCKET_URL =
     : "http://192.168.100.221:3000";
 
 export default function NotificationScreen() {
-  const [alert, setAlert] = useState(null);
+  const [alert, setAlert] = useState<AlartSignle | null>(null);
   const pulseAnim = useRef(new Animated.Value(0)).current;
+
+  const clearAlert = () => {
+    setAlert(null);
+  };
 
   useEffect(() => {
     const socket = io(SOCKET_URL, { reconnection: true });
@@ -51,12 +56,6 @@ export default function NotificationScreen() {
       pulseAnim.setValue(0);
     }
   }, [alert]);
-
-
-  const resetAlter = ()=> {
-    
-  }
-
 
   const startPulse = () => {
     Animated.loop(
@@ -99,6 +98,7 @@ export default function NotificationScreen() {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
+      <Button title={"Clear"} onPress={()=> clearAlert()}></Button>
 
       <View style={{ alignItems: "center", marginVertical: 32 }}>
         <Animated.View
